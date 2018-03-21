@@ -21,7 +21,7 @@ public class Proposer implements Processor {
 	private PaxosStage stage;
 	private Set<PaxosMsg> promiseMsg = new HashSet<PaxosMsg>();
 	private Set<PaxosMsg> acceptMsg = new HashSet<PaxosMsg>();
-	
+
 	private Thread monitor;
 	public boolean monitorStopFlag = false;
 	private MsgPusher pusher;
@@ -91,11 +91,11 @@ public class Proposer implements Processor {
 	}
 
 	private void chose() {
-		LogUtil.log("find chose : " + lastAcceptRequestValue);
+		LogUtil.log("find chose . proposalNumber: " + lastSendProposalNumber + " . chose: " + lastAcceptRequestValue);
 		pusher.stop();
 		monitorStopFlag = true;
 		ResourceUtil.release();
-    }
+	}
 
 	private boolean majority(int amount) {
 		return new BigDecimal(amount).compareTo(new BigDecimal(Acceptor.config.length).divide(new BigDecimal(2))) > 0;
@@ -116,23 +116,23 @@ public class Proposer implements Processor {
 			toAcc.setTo(acc.processorIp());
 			NetworkMock.sendMsg(toAcc);
 		}
-		
+
 		if (monitor == null) {
 			monitor = new Thread(new Runnable() {
 				public void run() {
-	                while (!monitorStopFlag) {
-	                	Date now = new Date();
-	                	if (now.getTime() - lastStartRoundTime.getTime() > Main.monitorPeriod) {
-	                		// 30秒没有完成表决，重新进入round
-	                		LogUtil.log("newround");
-	                		startRound();
-	                	}
-	                	try {
-	                        Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                        }
-	                }
-                }
+					while (!monitorStopFlag) {
+						Date now = new Date();
+						if (now.getTime() - lastStartRoundTime.getTime() > Main.monitorPeriod) {
+							// 30秒没有完成表决，重新进入round
+							LogUtil.log("newround");
+							startRound();
+						}
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+						}
+					}
+				}
 			});
 			monitor.setName(ip + " monitor");
 			monitor.start();
@@ -143,12 +143,11 @@ public class Proposer implements Processor {
 		return ip;
 	}
 
-
 	public void setMsgPusher(MsgPusher pusher) {
-	    this.pusher = pusher;
-    }
+		this.pusher = pusher;
+	}
 
 	public MsgPusher getMsgPusher() {
-	    return pusher;
-    }
+		return pusher;
+	}
 }
