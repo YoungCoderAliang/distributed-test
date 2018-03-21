@@ -8,9 +8,9 @@ import paxos.test.model.support.ResourceUtil;
 
 public class Main {
 	// 设定的acceptor的数量
-	public static int acceptorAmount = 19;
+	public static int acceptorAmount = 11;
 	// 设定的proposer的数量
-	public static int proposerNumber = 19;
+	public static int proposerNumber = 5;
 	// 用于驱动各个processor的线程数
 	public static int pushThreads = acceptorAmount * proposerNumber;
 	// 网络基础延迟
