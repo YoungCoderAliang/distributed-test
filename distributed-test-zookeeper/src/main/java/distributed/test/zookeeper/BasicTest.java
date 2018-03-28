@@ -1,7 +1,5 @@
 package distributed.test.zookeeper;
 
-import java.util.List;
-
 import net.sf.json.JSONObject;
 
 import org.apache.zookeeper.CreateMode;
@@ -16,23 +14,19 @@ public class BasicTest {
 	private static String basicPath = "/testbasic";
 
 	public static void main(String[] args) throws Exception {
+		// 这里定义的watcher是一个默认watcher
+		// 当 zk 接口中含有 boolean 型 watch 参数时，如果传值为true，则使用该watcher
 		zk = new ZooKeeper("127.0.0.1:2181", 10000, e -> {
 			// 连接建立的事件
-			    if (e.getState().equals(Event.KeeperState.SyncConnected)) {
-				    System.out.println("connected");
-			    }
+			    System.out.println("default watch: " + e.toString());
 		    });
 
-		testVersion();
-
+//		testDefaultWatcher();
 		// zookeeper的事件监听都是一次性的，服务器只会通知客户端一次
 		// testEventOnceHandle();
 
 		// 通过在监听回调中建立监听，持续的跟踪zookeeper节点数值变化
-		// testEventIterationHandle();
-
-		// zookeeper保证，如果客户端在节点上设置了监听，那么在监听处理完成之前，客户端看不到节点变化
-		// testEventAndDataSeq();
+		 testEventIterationHandle();
 
 		// String str = zk.create("/", "hello".getBytes(),
 		// ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
@@ -48,21 +42,16 @@ public class BasicTest {
 		// System.in.read();
 	}
 
-	private static void testVersion() {
-		try {
-			Stat s = zk.exists(basicPath, false);
-			if (s == null) {
-				zk.create(basicPath, "123".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-			}
-			
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
+	private static void testDefaultWatcher() throws InterruptedException, KeeperException {
+	    Thread.sleep(100);
+		zk.create("/haha", "haha".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+		Stat haha = zk.exists("/haha", true);
+		zk.delete("/haha", haha.getVersion());
+    }
 
 	public static void testEventOnceHandle() {
 		try {
-			Stat s = zk.exists(basicPath, false);
+			Stat s = zk.exists(basicPath, true);
 			if (s == null) {
 				zk.create(basicPath, "123".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			}
@@ -94,6 +83,12 @@ public class BasicTest {
 			Thread.sleep(100);
 			Stat set = zk.setData(basicPath, "456".getBytes(), zk.exists(basicPath, false).getVersion());
 			System.out.println("set: " + JSONObject.fromObject(set).toString());
+			Thread.sleep(1000);
+			// zookeeper的数据变更，是不受监听处理的影响的。比如监听要暂停3秒，但是主线程1秒后去读，也已经可以读取到最新的数据
+			// 监听方法被调用，只能说明这个变更已经可以被读取到了
+			// 如果监听处理的比较慢，很可能读取到更加靠后更新的数据
+			System.out.println(new String(zk.getData(basicPath, null, set)));
+			System.out.println("set: " + JSONObject.fromObject(set).toString());
 			Thread.sleep(100);
 			set = zk.setData(basicPath, "789".getBytes(), set.getVersion());
 			System.out.println("set: " + JSONObject.fromObject(set).toString());
@@ -109,13 +104,10 @@ public class BasicTest {
 	private static void printDataAndWatch() throws KeeperException, InterruptedException {
 		System.out.println(new String(zk.getData(basicPath, e -> {
 			try {
+				Thread.sleep(5000);
 				printDataAndWatch();
 			} catch (Exception e1) {
 			}
 		}, null)));
-	}
-
-	public static void testEventAndDataSeq() {
-
 	}
 }
