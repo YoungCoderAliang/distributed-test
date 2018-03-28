@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import paxos.test.Main;
+import paxos.test.BasicPaxosTest;
 import paxos.test.model.support.LogUtil;
 import paxos.test.model.support.MsgPusher;
 import paxos.test.model.support.NetworkMock;
@@ -122,7 +122,7 @@ public class Proposer implements Processor {
 				public void run() {
 					while (!monitorStopFlag) {
 						Date now = new Date();
-						if (now.getTime() - lastStartRoundTime.getTime() > Main.monitorPeriod) {
+						if (now.getTime() - lastStartRoundTime.getTime() > BasicPaxosTest.monitorPeriod) {
 							// 30秒没有完成表决，重新进入round
 							LogUtil.log("newround");
 							startRound();

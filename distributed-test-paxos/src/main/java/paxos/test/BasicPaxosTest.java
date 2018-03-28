@@ -6,7 +6,7 @@ import paxos.test.model.support.LogUtil;
 import paxos.test.model.support.MsgPusher;
 import paxos.test.model.support.ResourceUtil;
 
-public class Main {
+public class BasicPaxosTest {
 	// 设定的acceptor的数量
 	public static int acceptorAmount = 11;
 	// 设定的proposer的数量

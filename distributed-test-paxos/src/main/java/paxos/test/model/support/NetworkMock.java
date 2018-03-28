@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.processors.DefaultDefaultValueProcessor;
-import paxos.test.Main;
+import paxos.test.BasicPaxosTest;
 import paxos.test.model.PaxosMsg;
 
 public class NetworkMock {
@@ -26,18 +26,18 @@ public class NetworkMock {
 		});
 	}
 
-	public static ExecutorService es = Executors.newFixedThreadPool(Main.pushThreads);
+	public static ExecutorService es = Executors.newFixedThreadPool(BasicPaxosTest.pushThreads);
 	private static Random random =  new Random(System.currentTimeMillis());
 
 	public static void sendMsg(final PaxosMsg msg) {
 		es.submit(new Runnable() {
 			public void run() {
-				if (random.nextInt(Main.losePer) == 1) {
+				if (random.nextInt(BasicPaxosTest.losePer) == 1) {
 					return;
 				}
 //				LogUtil.log(JSONObject.fromObject(msg, jsonConfig).toString());
 				try {
-	                Thread.sleep(Main.msgDelayFixed + random.nextInt(Main.msgDelayRandom));
+	                Thread.sleep(BasicPaxosTest.msgDelayFixed + random.nextInt(BasicPaxosTest.msgDelayRandom));
                 } catch (InterruptedException e) {
                 }
 				if (!storeMsgs.containsKey(msg.getTo())) {

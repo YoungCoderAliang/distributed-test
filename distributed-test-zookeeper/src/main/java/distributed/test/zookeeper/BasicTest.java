@@ -22,11 +22,14 @@ public class BasicTest {
 				    System.out.println("connected");
 			    }
 		    });
+
+		testVersion();
+
 		// zookeeper的事件监听都是一次性的，服务器只会通知客户端一次
 		// testEventOnceHandle();
 
 		// 通过在监听回调中建立监听，持续的跟踪zookeeper节点数值变化
-		testEventIterationHandle();
+		// testEventIterationHandle();
 
 		// zookeeper保证，如果客户端在节点上设置了监听，那么在监听处理完成之前，客户端看不到节点变化
 		// testEventAndDataSeq();
@@ -43,6 +46,18 @@ public class BasicTest {
 		// System.out.println(createRet);
 		//
 		// System.in.read();
+	}
+
+	private static void testVersion() {
+		try {
+			Stat s = zk.exists(basicPath, false);
+			if (s == null) {
+				zk.create(basicPath, "123".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	public static void testEventOnceHandle() {
