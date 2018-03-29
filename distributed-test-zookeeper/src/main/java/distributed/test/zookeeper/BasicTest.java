@@ -1,10 +1,12 @@
 package distributed.test.zookeeper;
 
+import java.util.List;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.Watcher.Event;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
@@ -21,33 +23,89 @@ public class BasicTest {
 			    System.out.println("default watch: " + e.toString());
 		    });
 
-//		testDefaultWatcher();
+		// testDefaultWatcher();
 		// zookeeper的事件监听都是一次性的，服务器只会通知客户端一次
 		// testEventOnceHandle();
 
 		// 通过在监听回调中建立监听，持续的跟踪zookeeper节点数值变化
-		 testEventIterationHandle();
+		// testEventIterationHandle();
 
-		// String str = zk.create("/", "hello".getBytes(),
-		// ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-		// System.out.println(str);
-		// List<String> list = zk.getChildren("/dubbo", false);
-		// list.forEach(System.out::println);
-		//
-		// String createRet = zk.create("/testbasic", "123".getBytes(),
-		// ZooDefs.Ids.OPEN_ACL_UNSAFE,
-		// CreateMode.EPHEMERAL_SEQUENTIAL);
-		// System.out.println(createRet);
-		//
-		// System.in.read();
+		// testVersion();
+
+		// testCreateMode();
+
+	}
+
+	private static void testCreateMode() throws KeeperException, InterruptedException {
+		Stat s = zk.exists("/testNodeType", true);
+		if (s == null) {
+			zk.create("/testNodeType", "123".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		}
+		zk.create("/testNodeType/ephemera", "ephemera".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+		try {
+			// 临时节点下不能创建子节点
+			zk.create("/testNodeType/ephemera/inner", "inner".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+		} catch (Exception e) {
+			System.out.println("临时节点下不能创建子节点:" + e.getMessage());
+		}
+		System.out.println("永久节点属性：" + JSONObject.fromObject(s));
+		// zk.create("/testNodeType/persistentSeq", "persistentSeq".getBytes(),
+		// ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+		List<String> children = zk.getChildren("/testNodeType", false);
+		children.forEach(x -> {
+			if (x.startsWith("persistentSeq")) {
+				try {
+					Stat persistentSeq = zk.exists("/testNodeType/" + x, false);
+					System.out.println("永久有序节点属性：" + JSONObject.fromObject(persistentSeq));
+				} catch (Exception e) {
+				}
+			}
+		});
+		System.out.println("全部子节点：" + JSONArray.fromObject(children).toString());
+		Stat ephemera = zk.exists("/testNodeType/ephemera", false);
+		System.out.println("临时节点属性：" + JSONObject.fromObject(ephemera));
+		children = zk.getChildren("/testNodeType", false);
+		System.out.println("全部子节点：" + JSONArray.fromObject(children).toString());
+		zk.create("/testNodeType/ephemeraSeq", "ephemeraSeq".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,
+		        CreateMode.EPHEMERAL_SEQUENTIAL);
+		children = zk.getChildren("/testNodeType", false);
+		children.forEach(x -> {
+			if (x.startsWith("ephemeraSeq")) {
+				try {
+					Stat ephemeraSeq = zk.exists("/testNodeType/" + x, false);
+					System.out.println("临时有序节点属性：" + JSONObject.fromObject(ephemeraSeq));
+				} catch (Exception e) {
+				}
+			}
+		});
+		System.out.println("全部子节点：" + JSONArray.fromObject(children).toString());
+	}
+
+	private static void testVersion() throws KeeperException, InterruptedException {
+		Stat s = zk.exists("/testVersion", true);
+		if (s == null) {
+			zk.create("/testVersion", "123".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		}
+		// 创建子节点，父节点 cversion 自增
+		// 更新数据，version 自增
+		// 更新访问控制策略，aversion 自增
+		Stat before = zk.exists("/testVersion", false);
+		zk.create("/testVersion/v1", "v1".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+		Stat afterAddChild = zk.exists("/testVersion", false);
+		Stat afterChangeDate = zk.setData("/testVersion", "hahaha".getBytes(), before.getVersion());
+		Stat afterAclChange = zk.setACL("/testVersion", ZooDefs.Ids.OPEN_ACL_UNSAFE, before.getAversion());
+		System.out.println(JSONObject.fromObject(before).toString());
+		System.out.println(JSONObject.fromObject(afterAddChild).toString());
+		System.out.println(JSONObject.fromObject(afterChangeDate).toString());
+		System.out.println(JSONObject.fromObject(afterAclChange).toString());
 	}
 
 	private static void testDefaultWatcher() throws InterruptedException, KeeperException {
-	    Thread.sleep(100);
+		Thread.sleep(100);
 		zk.create("/haha", "haha".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 		Stat haha = zk.exists("/haha", true);
 		zk.delete("/haha", haha.getVersion());
-    }
+	}
 
 	public static void testEventOnceHandle() {
 		try {
