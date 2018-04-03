@@ -11,7 +11,7 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 
-public class BasicTest {
+public class ZookeeperBasicTest {
 	private static ZooKeeper zk;
 	private static String basicPath = "/testbasic";
 
@@ -30,7 +30,7 @@ public class BasicTest {
 		// 通过在监听回调中建立监听，持续的跟踪zookeeper节点数值变化
 		// testEventIterationHandle();
 
-		// testVersion();
+		 testVersion();
 
 		// testCreateMode();
 
