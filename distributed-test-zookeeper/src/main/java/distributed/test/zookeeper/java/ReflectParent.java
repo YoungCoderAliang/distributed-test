@@ -1,4 +1,4 @@
-package distributed.test.zookeeper;
+package distributed.test.zookeeper.java;
 
 public class ReflectParent {
 	private int num;

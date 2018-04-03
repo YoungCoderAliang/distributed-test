@@ -1,4 +1,4 @@
-package distributed.test.zookeeper;
+package distributed.test.zookeeper.java;
 
 import java.util.Arrays;
 import java.util.List;

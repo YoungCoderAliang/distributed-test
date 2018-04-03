@@ -1,4 +1,4 @@
-package distributed.test.zookeeper;
+package distributed.test.zookeeper.java;
 
 public class ReflectTest {
 	public static void main(String[] args) {
