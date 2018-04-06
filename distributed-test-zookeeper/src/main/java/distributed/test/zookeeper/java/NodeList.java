@@ -80,7 +80,7 @@ public class NodeList {
 
 	public static void main(String[] args) {
 		NodeList nl = new NodeList();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 9; i++) {
 			nl.addNode(new Node(i));
 		}
 		System.out.println(nl.toString());
