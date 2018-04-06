@@ -3,7 +3,7 @@ package distributed.test.zookeeper.java;
 import java.util.Arrays;
 import java.util.List;
 
-public class Java8Test {
+public class FunctionalInterfaceTest {
 	public static void main(String[] args) {
 		// 函数式接口，匿名类实现，通过作为赋值理解
 		TestInterface a = (x, y) -> {
