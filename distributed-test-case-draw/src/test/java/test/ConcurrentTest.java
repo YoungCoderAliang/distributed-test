@@ -20,6 +20,15 @@ public class ConcurrentTest {
 	private static Object lockUpfail = new Object();
 	private static int handleCount = 0;
 
+	// 2000 QPS ，如果是500w用户，需要处理 2500s，约41分钟
+	
+	/**
+已处理 5 万请求
+take time : 25632 ms
+success : 10
+updatefail : 0
+	 */
+	
 	public static void main(String[] args) {
 		ExecutorService es = Executors.newFixedThreadPool(500);
 		List<Future> fs = Lists.newArrayList();
