@@ -38,7 +38,7 @@ updatefail : 0
 			fs.add(es.submit(() -> {
 				try {
 					String uuid = UUID.get().toString();
-					String res = Jsoup.connect("http://localhost/draw/dodraw?userId=" + uuid).ignoreContentType(true).get()
+					String res = Jsoup.connect("http://localhost:8080/draw/dodraw?userId=" + uuid).ignoreContentType(true).get()
 					        .body().html();
 					SimpleResponse resp = (SimpleResponse) JSONObject.toBean(JSONObject.fromObject(res),
 					        SimpleResponse.class);

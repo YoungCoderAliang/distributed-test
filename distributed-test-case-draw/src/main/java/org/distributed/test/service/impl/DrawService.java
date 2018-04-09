@@ -41,7 +41,7 @@ public class DrawService implements IDrawService {
 	@Override
 	@Transactional
 	public SimpleResponse<Void> draw(Long userId) {
-		Long giftId = 1597264910449901694L;
+		Long giftId = 1597273180490170490L;
 		SimpleResponse<Void> resp = new SimpleResponse<Void>();
 		if (hasLeft && r.nextInt(2500) == 0) {
 			Gift g = giftMapperEx.selectByPrimaryKey(giftId);
