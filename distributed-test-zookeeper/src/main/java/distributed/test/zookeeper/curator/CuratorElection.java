@@ -12,6 +12,12 @@ import org.apache.curator.utils.CloseableUtils;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Curator 的操作，需要和 zookeeper 服务的版本号一致
+ * 具体的看 pom.xml 中 curator 依赖的zookeeper 版本
+ * @author Administrator
+ *
+ */
 public class CuratorElection {
 	private static String zkLocation = "127.0.0.1:2181";
 	private static String path = "/CuratorElection";
