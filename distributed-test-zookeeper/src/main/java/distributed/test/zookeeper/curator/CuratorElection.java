@@ -41,6 +41,9 @@ public class CuratorElection {
 						Thread.sleep(1000);
 						System.out.println("end leader : " + index);
 						Thread.sleep(1000);
+						if (index == 0) {
+							throw new RuntimeException("try break it");
+						}
 					}
 				});
 				llist.add(leaderSelector);
