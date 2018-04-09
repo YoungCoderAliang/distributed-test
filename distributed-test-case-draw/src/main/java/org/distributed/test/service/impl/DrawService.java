@@ -43,9 +43,10 @@ public class DrawService implements IDrawService {
 	public SimpleResponse<Void> draw(Long userId) {
 		Long giftId = 1597264910449901694L;
 		SimpleResponse<Void> resp = new SimpleResponse<Void>();
-		if (hasLeft && r.nextInt(250000) == 0) {
+		if (hasLeft && r.nextInt(2500) == 0) {
 			Gift g = giftMapperEx.selectByPrimaryKey(giftId);
 			if (g.getNum() > 0) {
+				g.setNum(g.getNum() - 1);
 				int count = giftMapperEx.updateByVersion(new GiftV(g, UUID.get()));
 				if (count == 0) {
 					logger.error("update by version fail. set as no draw.");

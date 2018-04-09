@@ -29,3 +29,6 @@ eureka:
     
 mybatis:
   type-aliases-package: org.distributed.test.entity
+  
+logging:
+  path: E:\\logs

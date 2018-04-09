@@ -24,7 +24,7 @@ public class ConcurrentTest {
 		ExecutorService es = Executors.newFixedThreadPool(500);
 		List<Future> fs = Lists.newArrayList();
 		long start = System.currentTimeMillis();
-		int requestCount = 500000;
+		int requestCount = 50000;
 		for (int i = 0; i < requestCount; i++) {
 			fs.add(es.submit(() -> {
 				try {
@@ -45,7 +45,7 @@ public class ConcurrentTest {
 						}
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+//					e.printStackTrace();
 				}
 			}));
 		}
