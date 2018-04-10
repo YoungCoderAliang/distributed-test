@@ -18,6 +18,7 @@
 --
 -- Table structure for table `gift`
 --
+use draw;
 
 DROP TABLE IF EXISTS `gift`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -30,6 +31,10 @@ CREATE TABLE `gift` (
   PRIMARY KEY (`gift_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+
+insert into gift(gift_id, gift_name, num, v) values(1597273180490170490, 'iphoneX', 10, 0);
+commit;
 
 --
 -- Table structure for table `gift_record`
@@ -54,3 +59,4 @@ CREATE TABLE `gift_record` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-04-09 19:38:36
+
