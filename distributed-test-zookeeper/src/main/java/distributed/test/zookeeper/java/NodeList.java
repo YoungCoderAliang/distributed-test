@@ -4,7 +4,7 @@ public class NodeList {
 	private Node head;
 	private Node tail;
 
-	public void addNode(Node node) {
+	public synchronized void addNode(Node node) {
 		if (node.next != null) {
 			throw new RuntimeException();
 		}
