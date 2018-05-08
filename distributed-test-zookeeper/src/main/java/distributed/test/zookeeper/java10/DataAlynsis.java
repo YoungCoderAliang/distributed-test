@@ -1,4 +1,4 @@
-package distributed.test.zookeeper;
+package distributed.test.zookeeper.java10;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -22,10 +22,10 @@ public class DataAlynsis {
 		// }
 		// }
 
-		String[] filePaths = new String[] {"1705", "1801", "1802", "1803", "1804", "1805"};
+		String[] filePaths = new String[] {"1705"};
 		for (String filePath : filePaths) {
 			BufferedReader br = new BufferedReader(new FileReader(
-					"/public/test/" + filePath));
+					"D:\\public\\test\\" + filePath));
 			List<String> sources = new LinkedList<String>();
 			String tmp = null;
 			while ((tmp = br.readLine()) != null) {
@@ -33,7 +33,7 @@ public class DataAlynsis {
 			}
 			br.close();
 			Pattern p = Pattern.compile("[ -/\\_][0-9]{5}[ -/\\_]");
-			FileOutputStream fos = new FileOutputStream("/public/test/"
+			FileOutputStream fos = new FileOutputStream("D:\\public\\test\\"
 					+ filePath + "_out_2");
 			sources.forEach(str -> {
 				Matcher m = p.matcher(str);
